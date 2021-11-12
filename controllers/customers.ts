@@ -81,3 +81,31 @@ export const getAverageAge = async ( req: Request, res: Response ) => {
     let avg = Math.round(sum / arrayAges.length);
     res.json({avg})
 }
+
+export const getAverage = async ( gender? : number ) => {
+    const customers = await Customer.findAll({where: {state: true, gender: gender}});
+    const today = new Date();
+    const arrayAges: number[] = []
+    customers.forEach(({birthdate} : any) => {
+        const formatBirthdate = new Date(birthdate)
+        let age = today.getFullYear() - formatBirthdate.getFullYear();
+        const month = today.getMonth() - formatBirthdate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < formatBirthdate.getDate())) {
+            age--;
+        }
+        arrayAges.push(age)
+    })
+    let sum = arrayAges.reduce((previous, current) => current += previous);
+    let avg = Math.round(sum / arrayAges.length);
+    return { count: customers.length, avg: avg}
+}
+
+export const getAverageMaleFemale = async (req: Request, res: Response) => {
+    const male = await getAverage(1)
+    const female = await  getAverage(2)
+    const data = {
+        male,
+        female
+    }
+    res.json(data)
+}

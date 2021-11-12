@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { deleteCustomer, getAverageAge, getCustomer, getCustomers, postCustomer, putCustomer } from "../controllers/customers";
+import { deleteCustomer, getAverageAge, getAverageMaleFemale, getCustomer, getCustomers, postCustomer, putCustomer } from "../controllers/customers";
 
 const router = Router();
 
 router.get('/age/average', getAverageAge);
+router.get('/gender/average', getAverageMaleFemale);
 router.get('/', getCustomers);
 router.get('/:id', getCustomer);
 router.post('/', postCustomer);

@@ -13,6 +13,9 @@ const Customer = db.define('Customer', {
     },
     state: {
         type: DataTypes.BOOLEAN
+    },
+    gender: {
+        type: DataTypes.NUMBER
     }
 });
 

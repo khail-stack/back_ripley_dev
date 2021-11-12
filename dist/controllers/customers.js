@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAverageAge = exports.deleteCustomer = exports.putCustomer = exports.postCustomer = exports.getCustomer = exports.getCustomers = void 0;
+exports.getAverageMaleFemale = exports.getAverage = exports.getAverageAge = exports.deleteCustomer = exports.putCustomer = exports.postCustomer = exports.getCustomer = exports.getCustomers = void 0;
 const customer_1 = __importDefault(require("../models/customer"));
 const getCustomers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const customers = yield customer_1.default.findAll({ where: { state: true } });
@@ -98,4 +98,32 @@ const getAverageAge = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.json({ avg });
 });
 exports.getAverageAge = getAverageAge;
+const getAverage = (gender) => __awaiter(void 0, void 0, void 0, function* () {
+    const customers = yield customer_1.default.findAll({ where: { state: true, gender: gender } });
+    const today = new Date();
+    const arrayAges = [];
+    customers.forEach(({ birthdate }) => {
+        const formatBirthdate = new Date(birthdate);
+        let age = today.getFullYear() - formatBirthdate.getFullYear();
+        const month = today.getMonth() - formatBirthdate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < formatBirthdate.getDate())) {
+            age--;
+        }
+        arrayAges.push(age);
+    });
+    let sum = arrayAges.reduce((previous, current) => current += previous);
+    let avg = Math.round(sum / arrayAges.length);
+    return { count: customers.length, avg: avg };
+});
+exports.getAverage = getAverage;
+const getAverageMaleFemale = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const male = yield (0, exports.getAverage)(1);
+    const female = yield (0, exports.getAverage)(2);
+    const data = {
+        male,
+        female
+    };
+    res.json(data);
+});
+exports.getAverageMaleFemale = getAverageMaleFemale;
 //# sourceMappingURL=customers.js.map

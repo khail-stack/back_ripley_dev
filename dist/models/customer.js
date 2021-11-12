@@ -17,6 +17,9 @@ const Customer = connection_1.default.define('Customer', {
     },
     state: {
         type: sequelize_1.DataTypes.BOOLEAN
+    },
+    gender: {
+        type: sequelize_1.DataTypes.NUMBER
     }
 });
 exports.default = Customer;
